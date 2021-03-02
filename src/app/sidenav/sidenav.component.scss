@@ -1,0 +1,67 @@
+.sidenav {
+  height: 100%;
+  width: 60px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  // padding-top: 2px;
+  // background: linear-gradient(to top  , #00bdf2 0%,#00b4f0 20%,#0065b3 75%,#004785 100%);
+  background: #002d72;
+}
+.logo {
+  margin-top: 5px;
+  height: 32px;
+  margin-left: -1px;
+}
+a.active-tab {
+  display: block;
+  // border-radius: 10px;
+  padding: 5px 5px 5px 5px;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+  height: 3.5em;
+  width: 3.5em;
+  text-decoration: none;
+  margin-bottom: 10px;
+  text-align: center;
+  cursor: pointer;
+
+  border: none;
+
+  background-color: #ffff;
+  color: #002d72;
+
+  justify-content: center;
+  border-collapse: separate;
+}
+.sideButtons {
+  display: block;
+  // border-radius: 10px;
+  padding: 5px 5px 5px 5px;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+  height: 3.5em;
+  width: 3.5em;
+  text-decoration: none;
+  margin-bottom: 10px;
+  text-align: center;
+  cursor: pointer;
+
+  border: none;
+
+  background-color: #002d72;
+  color: #ffffff;
+
+  justify-content: center;
+  border-collapse: separate;
+}
+.iconClass {
+  height: 3.2em;
+}

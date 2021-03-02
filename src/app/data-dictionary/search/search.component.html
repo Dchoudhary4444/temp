@@ -1,0 +1,61 @@
+<div class = searchAll>
+  <div class="searchOne">
+
+
+
+
+  <h4 > Application:</h4><select name="selectApplication" id="Application"  [(ngModel)]="selectApplication"  (change)="onOptionsSelected($event)">
+  <option  
+  *ngFor="let option of application;" 
+  [value]="option"  
+  >
+  {{ option}}
+</option>
+
+</select>
+</div>
+
+<div class="searchOne">
+<h4 > Instance:</h4><select name="selectInstance" id="Instance" [(ngModel)]="selectInstance"
+(change)="onOptionsSelected($event)"
+>
+<option
+  *ngFor="let option of instance"
+  [value]="option"
+>
+  {{ option}}
+</option>
+</select>
+</div>
+
+<div class="searchOne">
+<h4 > Schema:</h4><select name="selectSchema" id="Schema" [(ngModel)]="selectSchema"
+(change)="onOptionsSelected($event)"
+>
+<option
+  *ngFor="let option of schema"
+  [value]="option"
+>
+  {{ option}}
+</option>
+</select>
+</div>
+
+<div class="searchOne">
+<h4 > Table:</h4><select name="selectTable" id="Table" [(ngModel)]="selectTable"
+(change)="onOptionsSelected($event)"
+>
+<option
+  *ngFor="let option of table"
+  [value]="option"
+>
+  {{ option}}
+</option>
+</select>
+</div>
+</div>
+<div class="btn">
+<button style = "margin-right: 1rem; padding: 5px 10px; " (click)="search()" >Search</button>
+
+<button style = "margin-left: 1rem; padding: 5px 10px; " type='reset'  id="reset" (click)="resetValues()">Reset</button>
+</div>

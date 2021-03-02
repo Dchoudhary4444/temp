@@ -1,0 +1,126 @@
+<div *ngIf="!rowAdded" class="add-column ">
+  <button id="add" class="newButton" type="submit" (click)="addRow()">
+    <i class="fa fa-plus-circle" style="color: #FFF; cursor: pointer; margin-right: 5px;"></i>
+    Add Column</button>
+</div>
+
+<div *ngIf="rowAdded" class="container-fluid" style="border:2px;background: #dbe0f7; padding: 20px;">
+  <h4><strong>Add row :
+      <i class="fa fa-times cross-icon" (click)="onCrossClick()"></i>
+    </strong> </h4>
+    <form class="px-4 py-4" >
+  <table style="width: 100%; border-spacing: 10px;">
+    <tr>
+      <th>Priority Table</th>
+      <th>Application Name</th>
+      <th>Instance Name</th>
+      <th>Schema Name</th>
+      <th>Table Name</th>
+      <th>Column Name</th>
+    </tr>
+    <tr>
+      <td>
+        <select  >
+          <option *ngFor="let priority of schemaList">{{priority}}</option>
+        </select>
+      </td>
+      <td>
+        <select [(ngModel)]="newRowData.applicationName">
+          <option disabled> Choose an Application</option>
+          <option *ngFor="let option of schemaList" >
+            {{option}}
+          </option>
+        </select>
+      </td>
+      <td>
+        <select [(ngModel)]="newRowData.instanceName">
+          <option disabled> Choose an Instance</option>
+          <option *ngFor="let instance of schemaList">{{instance}}</option>
+        </select>
+      </td>
+      <td>
+        <select [(ngModel)]="newRowData.schemaName">
+          <option disabled> Choose a Schema</option>
+          <option *ngFor="let schema of schemaList">{{schema}}</option>
+        </select>
+      </td>
+      <td>
+        <select [(ngModel)]="newRowData.tableName">
+          <option disabled> Choose a Table Name</option>
+          <option *ngFor="let table of schemaList">{{table}}</option>
+        </select>
+      </td>
+      <td>
+        <input type="text" [(ngModel)]="newRowData.columnName">
+      </td>
+    </tr>
+    <br>
+    <!-- <tr>
+      <th>Column Data Type</th>
+      <th>Attribute in Data Lake</th>
+      <th>Target Table Name</th>
+      <th>Target Column Name</th>
+      <th>Is the field Static</th>
+      <th>Value for the static field</th>
+    </tr>
+    <tr>
+      <td>
+        <select [(ngModel)]="newRowData.columnDataType">
+          <option disabled> Choose a data type</option>
+          <option *ngFor="let columnDataType of schemaList">{{columnDataType}}</option>
+        </select>
+      </td>
+      <td>
+        <select [(ngModel)]="newRowData.attributeInDataLake">
+          <option disabled> Choose an option</option>
+          <option *ngFor="let attributeInDataLake of schemaList">{{attributeInDataLake}}</option>
+        </select>
+      </td>
+      <td>
+        <input disabled type="text"
+          [(ngModel)]="newRowData.targetTableName+newRowData.applicationName+'_'+newRowData.tableName">
+      </td>
+      <td>
+        <input disabled type="text" [(ngModel)]="newRowData.columnName">
+      </td>
+      <td>
+        <select [(ngModel)]="newRowData.isFieldStatic">
+          <option disabled> Is Field Static</option>
+          <option *ngFor="let isFieldStatic of schemaList">{{isFieldStatic}}</option>
+        </select>
+      </td>
+      <td>
+        <input type="text" [(ngModel)]="newRowData.valueForStaticField">
+      </td>
+    </tr> -->
+  </table>
+</form>
+  <div style="text-align: center;">
+    <button style="margin: 20px 10px;" class="newButton" type="submit" (click)="onSubmitClick()">
+      Submit</button>
+    <button style="margin: 20px 10px; " class="newButton" type="submit" (click)="onResetClick()">
+      Reset</button>
+  </div>
+</div>
+
+<div class="container-fluid" *ngIf="showModal" id="updateModal">
+  <p class="row" id="updateRowLabel">Add Row</p>
+  <p>Are you sure you want to add the row?</p>
+  <table id="modalTable" class="table" *ngIf="newRowData!=null">
+    <div *ngFor="let row of newRowData|keyvalue">
+      <tr class="row">
+        <thead>
+          <th>{{row.key}}</th>
+        </thead>
+
+        <td> {{ row.value }}</td>
+      </tr>
+    </div>
+  </table>
+  <button class="btn btn-danger" value="Cancel" id="cancelButton" (click)="cancelModal()">
+    Cancel
+  </button>
+  <button class="btn btn-success" value="Add" id="addButton">
+    Add
+  </button>
+</div>

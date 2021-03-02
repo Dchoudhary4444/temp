@@ -1,0 +1,14 @@
+.searchAll{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.searchOne{
+  flex-direction: column;
+  padding:5rem;
+}
+ .btn{
+   align-items: center;
+   justify-content: center;
+   display: block;
+ }

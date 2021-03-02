@@ -1,0 +1,520 @@
+
+
+
+
+
+//-----------------------------
+
+import { isGeneratedFile } from '@angular/compiler/src/aot/util';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+
+import { Data } from '../entity/Data';
+
+@Component({
+  selector: 'app-data-dictionary',
+  templateUrl: './data-dictionary.component.html',
+  styleUrls: ['./data-dictionary.component.scss'],
+})
+export class DataDictionaryComponent implements OnInit {
+
+  tableHeader:string[]=[]
+  public tableData: any[] = [];
+  public show: boolean = false;
+  public buttonName: any = 'Show';
+
+  application: any = [];
+  instance: any = [];
+  schema: any = [];
+  table: any = [];
+
+  filteredData: any = [];
+  allData: any = [];
+  filterBy: string = '';
+
+  searchBy: string = '';
+  tempList: any = [];
+  flag: boolean = false;
+  allSelected: boolean = true;
+  filterByPrevious:string="";
+  filterDataList:any=[];
+
+  constructor() {}
+
+  loadData() {
+    this.tableData = [
+      {
+        citiApplicationName: 'EUC',
+        dbInstanceName: 'DSGX',
+        dbSchemaName: 'GBO_EUC',
+        tabelName: 'DAILY_GLOBAL',
+        dataType: 'char(17)',
+        columnName: 'ABC',
+      },
+      {
+        citiApplicationName: 'DENSIFY',
+        dbInstanceName: 'GIP_EDW',
+        dbSchemaName: 'CLIENTRPT',
+        tabelName: 'STATUS',
+        dataType: 'int',
+        columnName: 'XYZ',
+      },
+      {
+        citiApplicationName: 'DUC',
+        dbInstanceName: 'XYZ',
+        dbSchemaName: 'GBU_EYC',
+        tabelName: 'WEEKLY_GLOBAL',
+        dataType: 'char(20)',
+        columnName: 'PQR',
+      },
+      {
+        citiApplicationName: 'SDT',
+        dbInstanceName: 'GOP_EDW',
+        dbSchemaName: 'CLIENTRPT',
+        tabelName: 'STATUS',
+        dataType: 'int',
+        columnName: 'XYZ',
+      },
+      {
+        citiApplicationName: 'EUC',
+        dbInstanceName: 'DSGX',
+        dbSchemaName: 'GBO_EUC',
+        tabelName: 'DAILY_GLOBAL',
+        dataType: 'char(17)',
+        columnName: 'PQR',
+      },
+      {
+        citiApplicationName: 'DENSIFY',
+        dbInstanceName: 'GOP_EDW',
+        dbSchemaName: 'CLIENTRPT',
+        tabelName: 'REPORT',
+        dataType: 'varchar(20)',
+        columnName: 'XYZ',
+      },
+      {
+        citiApplicationName: 'EOP',
+        dbInstanceName: 'DSGX',
+        dbSchemaName: 'GBO_EOP',
+        tabelName: 'DAILY_GLOBAL',
+        dataType: 'char(17)',
+        columnName: 'UVW',
+      },
+      {
+        citiApplicationName: 'DENSIFY',
+        dbInstanceName: 'GIP_EDW',
+        dbSchemaName: 'CLIENTRPT',
+        tabelName: 'REPORT',
+        dataType: 'int',
+        columnName: 'ABC',
+      },
+      {
+        citiApplicationName: 'EUC',
+        dbInstanceName: 'newDb',
+        dbSchemaName: 'GBO_EUC',
+        tabelName: 'DAILY_GLOBAL',
+        dataType: 'char(17)',
+        columnName: 'ABC',
+      },
+    ];
+    this.tableHeader = ["CTI Appl Name" , "Database Instance Name" , "Database Schema Name","Table Name","Column Name","Data Type"];
+
+    this.allData = this.tableData;
+    this.filteredData = this.tableData;
+    this.performFilter(this.tableData, "");
+  }
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  eventHandler(event: any) {
+    console.log('event handler chala');
+    console.log(event);
+    this.tableData = event;
+  }
+
+  onFilterClick(filterBy: string) {
+    console.log(filterBy)
+    this.filterBy = filterBy;
+    if(this.filterByPrevious.length==0){
+      this.filterByPrevious=this.filterBy;
+      this.show=true;
+    }
+    else{
+      if(this.filterByPrevious===this.filterBy){
+        this.show = false;
+        this.filterByPrevious="";
+      }
+      else{
+        this.filterByPrevious=this.filterBy;
+        this.show=true;
+      }
+    }//else ends here
+
+
+        if(this.show==true && this.filterBy==="CTI Appl Name"){
+            this.filterDataList=this.application;
+        }else if(this.show==true && this.filterBy==="Database Instance Name"){
+             this.filterDataList=this.instance;
+        }else if(this.show==true && this.filterBy==="Database Schema Name"){
+            this.filterDataList=this.schema;
+        }else if(this.show==true && this.filterBy==="Table Name"){
+            this.filterDataList=this.table;
+        }
+
+        this.allSelected=true;
+
+
+  }
+
+   filterList() {
+    //this.flag=false;   //future chnage needed
+
+    console.log("Filter by --->"+this.filterBy);
+    console.log('filtered data length --->' + this.filteredData.length);
+    console.log('table data length --->' + this.tableData.length);
+    let tempData: any = [];
+
+    this.filteredData = this.allData;
+    //------------------------------application
+    if (this.filterBy === "CTI Appl Name") {
+      this.instance=[];
+      this.schema=[];
+      this.table=[];
+
+      for (var i = 0; i < this.application.length; i++) {
+        for (var j = 0; j < this.filteredData.length; j++) {
+          if (this.application[i].name ===this.filteredData[j].citiApplicationName && this.application[i].isSelected === true) {
+            tempData.push(this.filteredData[j]);
+          }
+        }
+      }
+    }
+
+    //---------------instance
+    if (this.filterBy === "Database Instance Name") {
+      this.application=[];
+      this.schema=[];
+      this.table=[];
+
+      for(var i=0;i<this.instance.length;i++){
+        for(let j=0;j<this.filteredData.length;j++){
+          if(this.instance[i].name===this.filteredData[j].dbInstanceName && this.instance[i].isSelected===true){
+            tempData.push(this.allData[j])
+          }else{
+            tempData.splice(i,i+1)
+          }
+        }
+      }
+
+    }
+    // //--------------------schema
+    // if (this.filterBy === "Database Schema Name") {
+    //   this.instance=[];
+    //   this.table=[];
+    //   this.application=[];
+    //   console.log("database schema filter wale if me gya")
+
+    //   // for (var i = 0; i < this.schema.length; i++) {
+    //   //   for (var j = 0; j < this.filteredData.length; j++) {
+    //   //     if (this.schema[i].name ===this.filteredData[j].dbSchemaName && this.schema[i].isSelected === true) {
+    //   //       tempData.push(this.filteredData[j]);
+    //   //     }
+    //   //   }
+    //   // }
+
+    //   for (var i = 0; i < this.schema.length; i++) {
+    //     for (var j = 0; j < this.allData.length; j++) {
+    //       if (this.schema[i].name ===this.allData[j].dbSchemaName && this.schema[i].isSelected === true) {
+    //         tempData.push(this.allData[j]);
+    //       }
+    //     }
+    //   }
+    // }
+
+    // //--------------table
+    // if (this.filterBy === "Table Name") {
+    //   this.instance=[];
+    //   this.schema=[];
+    //   this.application=[];
+    //   console.log("database table filter wale if me gya")
+    //   for (var i = 0; i < this.table.length; i++) {
+    //     for (var j = 0; j < this.allData.length; j++) {
+    //       if (this.table[i].name ===this.allData[j].tabelName && this.table[i].isSelected === true) {
+    //         tempData.push(this.allData[j]);
+    //       }
+    //     }
+    //   }
+    // }
+
+    //-----------------------------final assignmnet of filtered data
+    console.log('tempData---->' + tempData.length);
+    this.tableData = tempData;
+    this.filteredData=tempData;
+    this.performFilter(this.filteredData,this.filterBy)
+    //this.makeNewList(this.filteredData,this.filterBy)
+  }
+
+
+  // makeNewList(tempData: any, filterBy: string){
+
+  //   if(filterBy==="CTI Appl Name"){
+  //     //let tempApplication: string[] = [];
+  //     let tempInstance: string[] = [];
+  //     let tempSchema:string[]=[];
+  //     let tempTable:string[]=[];
+  //     for (var i = 0; i < tempData.length; i++) {
+  //     if (!tempInstance.includes(tempData[i].dbInstanceName) ) tempInstance.push(tempData[i].dbInstanceName);
+  //     if (!tempSchema.includes(tempData[i].dbSchemaName) ) tempSchema.push(tempData[i].dbSchemaName);
+  //     if (!tempTable.includes(tempData[i].tabelName)) tempTable.push(tempData[i].tabelName);
+  //     }
+  //     this.performMakeNewList(tempInstance,this.instance);
+  //     this.performMakeNewList(tempSchema,this.schema);
+  //     this.performMakeNewList(tempTable,this.table);
+  //   }
+  //   if(filterBy==="Database Instance Name"){
+  //     let tempApplication: string[] = [];
+  //     //let tempInstance: string[] = [];
+  //     let tempSchema:string[]=[];
+  //     let tempTable:string[]=[];
+  //     for (var i = 0; i < tempData.length; i++) {
+  //       if (!tempApplication.includes(tempData[i].citiApplicationName) ) tempApplication.push(tempData[i].citiApplicationName);
+  //     //if (!tempInstance.includes(tempData[i].dbInstanceName) ) tempInstance.push(tempData[i].dbInstanceName);
+  //     if (!tempSchema.includes(tempData[i].dbSchemaName) ) tempSchema.push(tempData[i].dbSchemaName);
+  //     if (!tempTable.includes(tempData[i].tabelName)) tempTable.push(tempData[i].tabelName);
+  //     }
+  //     this.performMakeNewList(tempApplication,this.instance);
+  //     //this.performMakeNewList(tempInstance,this.instance);
+  //     this.performMakeNewList(tempSchema,this.schema);
+  //     this.performMakeNewList(tempTable,this.table);
+  //   }
+
+  // }
+  // performMakeNewList(data:any,listData:any){
+  //   listData=[];
+  //   for (let i = 0; i < data.length; i++) {
+  //     listData.push({
+  //       name: data[i],
+  //       isSelected: true,
+  //     });
+  //   }
+
+  // }
+  performFilter(tempData: any, filterBy: string) {
+
+    let tempApplication: string[] = [];
+    let tempInstance: string[] = [];
+    let tempSchema:string[]=[];
+    let tempTable:string[]=[];
+
+    for (var i = 0; i < tempData.length; i++) {
+       if (!tempApplication.includes(tempData[i].citiApplicationName) && filterBy !== "CTI Appl Name") tempApplication.push(tempData[i].citiApplicationName);
+      if (!tempInstance.includes(tempData[i].dbInstanceName) && filterBy !== "Database Instance Name") tempInstance.push(tempData[i].dbInstanceName);
+      if (!tempSchema.includes(tempData[i].dbSchemaName) && filterBy !== 'Database Schema Name') tempSchema.push(tempData[i].dbSchemaName);
+      if (!tempTable.includes(tempData[i].tabelName) && filterBy !== 'Table Name') tempTable.push(tempData[i].tabelName);
+    }//for ends here
+
+
+    //only for application
+    console.log("****************tempApplication Length"+tempApplication.length)
+    console.log(tempApplication)
+
+    let found:boolean=false;
+    if(tempApplication.length<this.application.length  && tempApplication.length>0){
+      this.application=[];
+      for (let i = 0; i < tempApplication.length; i++) {
+        this.application.push({
+          name: tempApplication[i],
+          isSelected: true,
+        });
+
+      }
+
+  }else{
+    for (let i = 0; i < tempApplication.length; i++) {
+      for(let j=0;j<this.application.length;j++){
+        if(this.application[j].name==tempApplication[i]){
+          found=true;
+          break;
+        }
+      }
+      if(!found){
+      this.application.push({
+        name: tempApplication[i],
+        isSelected: true,
+      });
+      }
+    }
+  }//else ends here
+    //for instance
+   for (let i = 0; i < tempInstance.length; i++) {
+      this.instance.push({
+        name: tempInstance[i],
+        isSelected: true,
+      });
+    }
+
+    //for Schema
+   for (let i = 0; i < tempSchema.length; i++) {
+      this.schema.push({
+        name: tempSchema[i],
+        isSelected: true,
+      });
+    }
+
+    //for table
+    for (let i = 0; i < tempTable.length; i++) {
+      this.table.push({
+        name: tempTable[i],
+        isSelected: true,
+      });
+    }
+
+      console.log("application length--->"+this.application.length);
+      console.log("intance length--->"+this.instance.length,this.instance);
+      console.log("schme length--->"+this.schema.length);
+      console.log("table length--->"+this.table.length);
+
+    //  console.log(this.table)
+  }
+
+
+  searchByText() {
+    console.log(this.searchBy);
+
+    if(this.filterBy==="CTI Appl Name")
+    {
+      this.performSearchByText(this.application)
+    }
+
+    if(this.filterBy==="Database Instance Name")
+    {
+      this.performSearchByText(this.instance)
+    }
+
+    if(this.filterBy==="Database Schema Name")
+    {
+      this.performSearchByText(this.schema)
+    }
+    if(this.filterBy==="Table Name")
+    {
+      this.performSearchByText(this.table)
+    }
+
+    }
+
+
+  performSearchByText(data:any){
+    this.filterDataList= data.filter((d: any) => {
+      if (d.name.toLowerCase().includes(this.searchBy.toLowerCase())) {
+        d.isSelected = true;
+        return true;
+      } else{
+        d.isSelected=false;
+        return false;
+      };
+    });
+
+    if (this.filterDataList.length <= 0) this.allSelected = false;
+    if (this.filterDataList.length > 0) this.allSelected = true;
+    //this.filterDataList=data;
+
+  }
+
+
+  //-----------------------------------------------------------------------------------------------------------------
+  selectAll(event: any) {
+    //console.log(event.target.checked);
+    if(this.filterBy==="CTI Appl Name")
+    {
+      this.performSelectAll(event.target.checked,this.application)
+    }
+
+    if(this.filterBy==="Database Instance Name")
+    {
+      this.performSelectAll(event.target.checked,this.instance)
+    }
+
+    if(this.filterBy==="Database Schema Name")
+    {
+      this.performSelectAll(event.target.checked,this.schema)
+    }
+    if(this.filterBy==="Table Name")
+    {
+      this.performSelectAll(event.target.checked,this.table)
+    }
+  }
+
+  performSelectAll(value:boolean,data:any){
+    for (var i = 0; i < data.length; i++) {
+      data[i].isSelected = value;
+    }
+     this.allSelected = value;
+
+  }
+
+
+
+  invertAll() {
+    if(this.filterBy==="CTI Appl Name"){
+      this.performInvertAll(this.application)
+    }
+    if(this.filterBy==="Database Instance Name")
+    {
+      this.performInvertAll(this.instance)
+   }
+    if(this.filterBy==="Database Schema Name")
+    {
+      this.performInvertAll(this.schema)
+    }
+    if(this.filterBy==="Table Name")
+    {
+      this.performInvertAll(this.table)
+    }
+  }
+
+  performInvertAll(data:any){
+    let count = 0;
+    for (var i = 0; i < data.length; i++) {
+      data[i].isSelected = !data[i].isSelected;
+      if (data[i].isSelected == true) count++;
+    }
+    if (count == data.length) this.allSelected = true;
+    else this.allSelected = false;
+  }
+
+  toggleCheckbox(event: any) {
+    let targetName = event.target.name;
+
+    if(this.filterBy==="CTI Appl Name")
+    {
+      this.performToogleCheckbox(this.application,targetName);
+    }
+    if(this.filterBy==="Database Instance Name")
+    {
+      this.performToogleCheckbox(this.instance,targetName);
+    }
+    if(this.filterBy==="Database Schema Name")
+    {
+      this.performToogleCheckbox(this.schema,targetName);
+    }
+    if(this.filterBy==="Table Name")
+    {
+      this.performToogleCheckbox(this.table,targetName);
+    }
+  }
+
+  performToogleCheckbox(data:any,targetName:string){
+    let count = 0;
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].name === targetName) data[i].isSelected = !data[i].isSelected;
+      if (data[i].isSelected == false) continue;
+      else count++;
+    }
+
+    console.log(count);
+    if (count == data.length) this.allSelected = true;
+    else this.allSelected = false;
+
+  }
+} //class ends here

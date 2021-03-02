@@ -1,0 +1,196 @@
+// Search and filter css
+#tableContainer {
+  display: flex;
+  overflow: scroll;
+}
+.search-container {
+  background: lightgrey;
+  padding: 10px;
+}
+.container-2 {
+  background: white;
+  padding: 5px;
+  height: 150px;
+  white-space: nowrap;
+  // word-wrap: unset;
+  overflow: scroll;
+  margin: 5px;
+}
+#buttonContainer {
+  text-align: center;
+  align-items: center;
+}
+.search-btn {
+  margin: 2px;
+  color: #002d72;
+  border-color: #002d72;
+}
+.search-btn:hover {
+  color: white;
+  border-color: #002d72;
+  background-color: #002d72;
+}
+
+.custom-checkbox input,
+.custom-checkbox2 input {
+  display: none;
+}
+
+.custom-checkbox span,
+.custom-checkbox2 span {
+  border: 3px none;
+  float: left;
+  height: 20px;
+  width: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-checkbox:hover span,
+.custom-checkbox input:checked + span {
+  border: none;
+}
+
+.custom-checkbox input:checked + span:before {
+  content: "✔";
+  color: #002d72;
+}
+
+.title {
+  color: #002d72;
+  margin-top: 5px;
+}
+
+.custom-checkbox2 span {
+  border: 2px solid #002d72 !important;
+}
+
+.custom-checkbox2 input:checked + span {
+  border: none !important;
+}
+
+.custom-checkbox2 input:checked + span:before {
+  content: "✔";
+  color: #002d72;
+}
+// Search and filter css
+
+// Table Header Css
+thead {
+  background-color: #002d72;
+  color: white;
+  font-weight: bold;
+}
+.table-header {
+  justify-content: space-around;
+  display: flex;
+}
+.table-header-text {
+  padding: 2%;
+  align-self: center;
+}
+.table-header-prop {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2%;
+}
+.table-data {
+  width: fit-content;
+}
+.icon {
+  cursor: pointer;
+  padding: 3px;
+}
+// Table Header Css
+.export-clearAll-btn {
+  background-color: white;
+  border: solid #002d72;
+  border-radius: 15px;
+  align-self: center;
+  margin: 0px 10px;
+}
+
+.editContainer {
+  display: flex;
+  justify-content: center;
+}
+
+#cancelButton,
+#updateButton {
+  margin: 2px;
+}
+.form-inline {
+  display: flex;
+  align-items: center;
+}
+input[type="number"][size="4"] {
+  width: 5em;
+}
+
+#updateModal {
+  background: lightgrey;
+  z-index: 2;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  border-radius: 5px;
+  padding-bottom: 5px;
+}
+#updateRowLabel {
+  background: green;
+  color: white;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  // width: 100%;
+}
+
+#modalTable,
+#modalTable th,
+#modalTable td {
+  border: 1px solid grey;
+  padding: 4px;
+}
+
+.navbar ul {
+  list-style: none;
+  background: #002e728a;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar li {
+  display: inline-block;
+  position: relative;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: white;
+  width: 379px;
+  display: block;
+  padding: 10px;
+  font-size: 15px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar a:hover {
+  background: #002d72;
+  size:20px;
+}
+
+.navbar .tab-active {
+  background: #002d72;
+}
+
+.filterIcon{
+  color:yellow;
+  font-size: 2rem;
+}
+

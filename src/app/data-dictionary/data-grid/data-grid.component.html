@@ -1,0 +1,171 @@
+  <!--  export & clear all -->
+  <div style="margin-top: 30px; text-align:right;">
+    <button class="export-clearAll-btn" type="button" value="Export" (click)="export()">
+      Export <i class="fa fa-download" aria-hidden="true"></i>
+    </button>
+    <button class="export-clearAll-btn" (click)="clearAll()"> Clear All</button><br>
+  </div>
+  <div class="navbar">
+    <ul>
+      <li *ngFor="let tab of tabArray" [id]="tab"> <a [ngClass]=" {'tab-active' : tab == cur_tab} "
+          (click)="onTabClick(tab , $event)"> {{tab}} </a> </li>
+    </ul>
+  </div>
+  <!-- table Code -->
+  <div id="tableContainer" style="margin-top: 15px;">
+
+    <div class="container-fluid search-container" (mouseleave)="onFilterFocusLost()" [style.display]="show" #filterDiv>
+      <div>
+        <label>Search</label>
+        <div>
+          <input id="input" type="text" class="form-control" [(ngModel)]="searchBy" placeholder="Search" autofocus
+            (input)="searchByText()" />
+        </div>
+        <label class="custom-checkbox2 title">
+          <input type="checkbox" name="selectAll" id="selectAll" [checked]="allSelected"
+            (click)="selectAll($event)" /><span></span> Select All
+        </label>
+      </div>
+      <div class="container-2">
+        <p *ngFor="let data of filterDataList">
+          <label class="custom-checkbox">
+            <input type="checkbox" [name]="data.name" [id]="data.name" [checked]="data.isSelected"
+              (change)="toggleCheckbox($event)" />
+            <span></span>{{ data.name }}
+          </label>
+        </p>
+      </div>
+      <div class="container-fluid" id="buttonContainer">
+        <button (click)="filterList()" class="btn search-btn">Filter</button>
+        <button (click)="invertAll()" class="btn search-btn">Invert</button>
+      </div>
+    </div>
+    <br>
+
+    <br>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <!-- keyvalue:originalOrder" -->
+          <th scope="col" *ngFor="let header of slicedTableHeader"
+          >
+            <div class="table-header">
+              <div class="table-header-text">
+                {{ header.displayHeader}} &nbsp;
+              </div>
+              <div class="table-header-prop">
+                <i class="fa fa-angle-up fa-lg icon" aria-hidden="true" 
+                (click)="setSortParams('asc', header.name, header.type)"
+                >
+              </i>
+                <i class="fa fa-angle-down fa-lg icon" aria-hidden="true"
+                (click)="setSortParams('desc', header.name, header.type)"
+                >
+              </i>
+                
+               
+              <ng-template [ngIf]="header.isFilterable" [ngIfElse]="iconVisiblity">
+                <i [hidden]="header.isFilterable " class="fa fa-filter icon " [ngClass]="{'filterIcon':header.isFiltered}"    aria-hidden="true"
+                (click)="onFilterClick($event, header.name)"
+                 ></i>
+             </ng-template>
+             
+             <ng-template #iconVisiblity>
+              <i [hidden]="header.isFilterable " class="fa fa-filter icon  "  [ngStyle]="{color:'#002e728a'}"   aria-hidden="true" ></i>
+             </ng-template>
+                
+
+                  
+               
+
+              </div>
+            </div>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of tableData | sort:sortDirection:propName:propDataType ; index as i">
+          <td>
+            <button class="btn" style="background: none" value="Edit" (click)="enableEdit(item, i)"
+              *ngIf="!editable || enableEditIndex != i">
+              <i class="fa fa-edit" aria-hidden="true" style="font-size: 20px" style="color: green"></i>
+            </button>
+            <div *ngIf="editable && enableEditIndex == i" class="editContainer">
+              <button class="btn btn-danger" value="Cancel" id="cancelButton" (click)="cancel()">
+                Cancel
+              </button>
+              <button class="btn btn-success" value="Update" id="updateButton" (click)="showUpdateModal(item)">
+                Update
+              </button>
+            </div>
+          </td>
+          <!-- <tbody>
+          <tr *ngFor= "let item of tableData " >
+            <td *ngFor = "let col of colArray"> {{item[col]}} </td>
+          </tr>
+        </tbody> -->
+          <td *ngFor="let col of slicedTableHeader;let j = index">
+            <span *ngIf="!editable || enableEditIndex != i||!col.editable">{{
+              item[col.name]
+            }}</span>
+
+            <input type="{{col.type}}" class="form-control"
+              *ngIf="col.editable && editable && enableEditIndex == i && col.type != 'multiple'"
+              [value]="item[col.name]" (blur)="changeinput(col.name,$event,item)">
+
+            <form class="form-inline" [formGroup]="dataTypeForm"
+              *ngIf="col.editable && editable && enableEditIndex == i && col.type == 'multiple'">
+              <select formControlName="dataTypeControl" class="form-control" #dataTypeSelect
+                (change)="onDataTypeOptionsSelected(dataTypeSelect.value)">
+                <option *ngFor="let dataType of dataTypeList" [value]="dataType.name">
+                  {{ dataType.name }}
+                </option>
+              </select>
+              <input type="number" class="form-control" min=-1 formControlName="dataTypeSizeControl" #dataTypeValue
+                [style.display]="showSize" size="4" />
+            </form>
+          </td>
+          <!-- <td>{{ item.citiApplicationName }}</td>
+          <td>{{ item.dbInstanceName }}</td>
+          <td>{{ item.dbSchemaName }}</td>
+          <td>{{ item.tabelName }}</td>
+          <td>{{ item.columnName }}</td>
+          <td>{{ item.dataType }}</td>
+          <td>{{ item.columnDescription }}</td>
+          <td>{{ item.minCharactersLength }}</td>
+          <td>{{ item.priorityTable }}</td>
+          <td>{{ item.positionalOrderNo }}</td>
+          <td>{{ item.attributeInDataLake }}</td>
+          <td>{{ item.targetTableName }}</td>
+          <td>{{ item.targetColumnName }}</td>
+          <td>{{ item.isStatic }}</td>
+          <td>{{ item.value }}</td> -->
+        </tr>
+      </tbody>
+    </table>
+    <div class="container-fluid" *ngIf="showModal" id="updateModal">
+      <p class="row" id="updateRowLabel">Update Row</p>
+      <p>Are you sure you want to update the row?</p>
+      <table id="modalTable" class="table" *ngIf="modalTableData.length!=0">
+        <thead>
+          <th>Column Name</th>
+          <th>Previous Value</th>
+          <th>New Value</th>
+        </thead>
+
+        <tr *ngFor="let row of modalTableData">
+          <td>{{ row.name }}</td>
+          <td>{{ row.oldValue }}</td>
+          <td>{{ row.newValue }}</td>
+        </tr>
+      </table>
+      <button class="btn btn-danger" value="Cancel" id="cancelButton" (click)="cancelModal()">
+        Cancel
+      </button>
+      <button class="btn btn-success" value="Update" id="updateButton">
+        Update
+      </button>
+    </div>
+  </div>

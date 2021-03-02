@@ -1,0 +1,167 @@
+<br>
+<ng-container>
+  <div style="float: left;;">
+    <label for="NoOfTables" style="margin-right: 20px;">Choose from existing template : </label>
+    <select [(ngModel)]="selected_template" (change)="template_selected()">
+      <option disabled> Choose a template</option>
+      <option *ngFor="let option of option_array">{{option}}</option>
+    </select>
+    <label for="newButton" style="margin-left: 20px;margin-right: 20px;"> Or Create</label>
+    <button id="newButton" class="newButton" type="submit" (click)="new_template()">New Template</button>
+  </div>
+  <div style="float: right;">
+
+  </div>
+</ng-container>
+<br>
+<br>
+
+
+<div class="tabs">
+  <ng-container *ngFor="let d of data">
+
+    <a class="single-tab" [ngClass]="{'active-tab' : cur_tab == d['table']}" (click)="cur_tab=d['table']">
+      {{d['table']}}
+      <i class="fa fa-times-circle" style=" margin-left: 3px; cursor: pointer;" (click)="remove_tab(d['table'])"></i>
+    </a>
+  </ng-container>
+
+  <i class="fa fa-plus-circle" style="color: #002D72; cursor: pointer; margin-left: 5px;" (click)="add_tab()"></i>
+
+</div>
+<br>
+<div class="outer">
+  <br>
+
+
+</div>
+
+
+<div class="outer" *ngFor="let d of data">
+  <ng-container *ngIf="d['table'] == cur_tab">
+    <div class="schemaVal">
+      <table style="width: 100%;">
+        <tr>
+          <th>Table Name</th>
+          <th>Number of Records</th>
+          <th>Choose an Output Storage </th>
+          <th>Language of Dataset</th>
+        </tr>
+        <tr>
+          <td>
+            <input type="text" [(ngModel)]="d['table']" (input)="cur_tab=d['table']">
+          </td>
+          <td>
+            <input type="number" [(ngModel)]="d['size']">
+          </td>
+          <td>
+            <select [(ngModel)]="d['output']">
+              <option disabled> Choose an Output Storage</option>
+              <option *ngFor="let outf of output_formats">{{outf}}</option>
+            </select>
+          </td>
+          <td>
+            <select [(ngModel)]="d['language']">
+              <option disabled> Choose an Output Storage</option>
+              <option *ngFor="let lang of language_array">{{lang}}</option>
+            </select> </td>
+        </tr>
+      </table>
+
+      <br>
+      <div class="add-column col-sm-12">
+        <button id="addColumn" class="newButton" type="submit" (click)="add_column(cur_tab)">
+          <i class="fa fa-plus-circle" style="color: #FFF; cursor: pointer; margin-right: 5px;"></i>
+          Add Column</button>
+      </div>
+      <br>
+      <br>
+      <div class="secondtable">
+        <table style="width:100%">
+          <thead>
+            <tr>
+              <th style="width: 5px;">Action</th>
+              <th>Column Name</th>
+              <th>Column DataType</th>
+              <th>Column Category</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let col of d['colvalues']">
+              <td>
+                {{col|json}}
+                <i class="fa fa-trash-o" style="color: rgb(112, 20, 20); cursor: pointer;"
+                  (click)="remove_col(cur_tab,col['col'])"></i>
+              </td>
+              <td>
+                <input style="margin-left: 10px;" type="text" [(ngModel)]="col['col']">
+              </td>
+              <td>
+                <select [(ngModel)]="col['dt']">
+                  <option disabled> Choose a Data Type</option>
+                  <option *ngFor="let data_type of data_type_array">{{data_type}}</option>
+                </select>
+              </td>
+              <td>
+                <select [(ngModel)]="col['cat']">
+                  <option disabled> Choose a Category</option>
+                  <option *ngFor="let category of cat_array">{{category}}</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </ng-container>
+
+</div>
+<div class="outer">
+  <br>
+
+
+</div>
+<br>
+<br>
+
+<!-- <div style="background-color: #002D72;">
+    <input id="addColumn" class="submitBtn" type="submit" value="Submit" ">
+</div> -->
+<div class="submitBtn" (click)="showPopUp('Submit Details','Are you sure you want to proceed?')">
+  Submit
+</div>
+
+<!-- code for pop up starts -->
+
+<div class="disableBigDiv" id="disableBigDivId">
+  <div style="align-items: center;">
+    <div class="popUp" id="popUpId">
+      <p class="popUpHeader"> {{popUpConfiguration['headerName']}} </p>
+      <hr>
+      <div id="popUpMsg" style="margin-left: 8px;">
+        <p id="popupContent"> {{popUpConfiguration['content']}} </p>
+      </div>
+      <br>
+      <button *ngIf="displayConfirmBtns" class="Btn" (click)="submit_form()">
+
+        <i class="fa fa-check-circle" style="margin-right: 5px;"></i>Yes,Confirm
+      </button>
+
+      <button *ngIf="displayConfirmBtns" class="Btn" (click)="hidePopup()">
+        <i class="fa fa-check-circle" style="margin-right: 5px;"></i>No,Cancel
+      </button>
+
+      <button *ngIf="!displayConfirmBtns" class="Btn" (click)="hidePopup()">
+        <i class="fa fa-check-circle" style="margin-right: 5px;"></i>ok
+      </button>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- code for pop up ends -->
+<app-loader [displayVar]="display_loader" message_to_display="Preparing your data for Hackathon 2020.."></app-loader>
