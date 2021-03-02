@@ -70,6 +70,7 @@ export class DataGridComponent implements OnInit {
   enableEditIndex = null;
   editField: any;
   flag1: boolean = false;
+  maxId : any;
 
   modalTableData: any = [];
   changedData: any = [];
@@ -244,7 +245,7 @@ export class DataGridComponent implements OnInit {
       },
     ];
    this.tabArray = ["Schema Details", "Analysis Details", "Modeling Details"];
-    this.schemaDesignArray = ["id","citiApplicationName", "dbInstanceName", "dbSchemaName", "columnName"]
+    this.schemaDesignArray = ["id","citiApplicationName", "dbInstanceName", "dbSchemaName", "columnName","columnDescription","minCharactersLength"]
     this.analysisDesignArray = ["id","dbSchemaName", "tabelName", "dataType","targetColumnName"]
     this.modelingDesignArray = ["id","tabelName", "dataType", "columnName"]
 
@@ -405,8 +406,8 @@ export class DataGridComponent implements OnInit {
       // console.log(this.tableData);
     });
   }
-  //Enable Editing
-  enableEdit(item: any, i: any) {
+   //Enable Editing
+   enableEdit(item: any, i: any) {
     this.modalTableData = [];
     this.changedData = [];
     this.flag1 = false;
@@ -427,6 +428,11 @@ export class DataGridComponent implements OnInit {
     console.log(regexStr[0]);
 
     this.dataTypeForm.patchValue({ dataTypeControl: regexStr[0]});
+
+    this.ddService.getMaxId().subscribe(data => {
+      console.log(typeof(data));
+      this.maxId = data;
+    })
   }
   //return if size is applicable to data_type
   isSizePresent(dataTypeSelector: any): boolean {
@@ -453,28 +459,37 @@ export class DataGridComponent implements OnInit {
     this.changedData = [];
     this.flag1 = false;
   }
+
+ 
   changeinput(colName: any, val: any, item: any) {
 
-    console.log(colName, val.target.value, item[colName]);
-    if (item[colName] !== val.target.value) {
+    console.log(colName, val.target.value,item[colName]);
+    
+    if (item[colName] != val.target.value) { 
+      this.changedData = this.changedData.filter(function(element: any,index: any,self:any[]){
+        return element.name !== colName;
+      });
       this.changedData.push({
         name: colName,
         oldValue: item[colName],
         newValue: val.target.value,
-      });
-      // for(let item of this.changedData){
-      //   if(item.name===colName && item.){
-
-      //   }
-      // }
+       });
+      this.flag1 = true;
     }
-    this.flag1 = true;
-  }
+    else{
+      this.changedData = this.changedData.filter(function(element: any,index: any,self:any[]){
+       return element.name !== colName;
+      });
+      } 
+    }
+    
   showUpdateModal(item: any) {
 
     this.showModal = true;
     this.modalTableData = [];
     this.modalTableData = this.changedData;
+   
+    
 
     if (this.isSizePresent(this.dataTypeForm.get('dataTypeControl')?.value)) {
       var newDataType: any;
@@ -494,19 +509,49 @@ export class DataGridComponent implements OnInit {
       });
       this.flag1 = true;
     }
-
-    if (this.flag1) {
+    
+    
+    if (this.flag1 && this.modalTableData[0].name!=='id') {
       this.modalTableData.splice(0, 0, {
         name: 'id',
         oldValue: item.id,
-        newValue: item.id,
+        newValue: this.maxId+1
       });
     }
-    this.deleteRow(item);
 
   }
   cancelModal() {
     this.showModal = false;
+  }
+
+  //update row
+  deepCopyRow(o : any) : any {
+    return JSON.parse(JSON.stringify(o));
+  }
+
+  updateRow(item: any){
+    var oldEditableRow = this.tableData.filter(function(element: any,index: any,self:any[]){
+      return element.id == item[0].oldValue;
+    });
+    console.log("before cmp",oldEditableRow);
+
+    var newEditedRow = this.deepCopyRow(oldEditableRow);
+    for(let i=0; i<this.dbColumnNames.length; i++)
+    {
+      for(let j=0;j<item.length;j++){
+        if(this.dbColumnNames[i].name == item[j].name){
+          console.log(item[j].name);
+          newEditedRow[0][item[j].name]=item[j].newValue;
+          
+        }
+      }
+
+    }
+   
+    this.ddService.editRow(JSON.parse(JSON.stringify(newEditedRow)),oldEditableRow[0]['id']);
+      this.showModal = false;
+      this.editable = false; 
+    
   }
   //newly added function
   onFilterFocusLost() {

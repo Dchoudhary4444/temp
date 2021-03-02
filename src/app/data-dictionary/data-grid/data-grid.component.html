@@ -127,45 +127,49 @@
                 [style.display]="showSize" size="4" />
             </form>
           </td>
-          <!-- <td>{{ item.citiApplicationName }}</td>
-          <td>{{ item.dbInstanceName }}</td>
-          <td>{{ item.dbSchemaName }}</td>
-          <td>{{ item.tabelName }}</td>
-          <td>{{ item.columnName }}</td>
-          <td>{{ item.dataType }}</td>
-          <td>{{ item.columnDescription }}</td>
-          <td>{{ item.minCharactersLength }}</td>
-          <td>{{ item.priorityTable }}</td>
-          <td>{{ item.positionalOrderNo }}</td>
-          <td>{{ item.attributeInDataLake }}</td>
-          <td>{{ item.targetTableName }}</td>
-          <td>{{ item.targetColumnName }}</td>
-          <td>{{ item.isStatic }}</td>
-          <td>{{ item.value }}</td> -->
+
         </tr>
       </tbody>
     </table>
     <div class="container-fluid" *ngIf="showModal" id="updateModal">
       <p class="row" id="updateRowLabel">Update Row</p>
-      <p>Are you sure you want to update the row?</p>
-      <table id="modalTable" class="table" *ngIf="modalTableData.length!=0">
-        <thead>
-          <th>Column Name</th>
-          <th>Previous Value</th>
-          <th>New Value</th>
-        </thead>
-
-        <tr *ngFor="let row of modalTableData">
-          <td>{{ row.name }}</td>
-          <td>{{ row.oldValue }}</td>
-          <td>{{ row.newValue }}</td>
-        </tr>
-      </table>
-      <button class="btn btn-danger" value="Cancel" id="cancelButton" (click)="cancelModal()">
-        Cancel
-      </button>
-      <button class="btn btn-success" value="Update" id="updateButton">
-        Update
-      </button>
+      <div *ngIf="modalTableData.length == 0">
+        <p>No Changes have been made !</p>
+        <button
+          class="btn btn-danger"
+          value="Cancel"
+          id="cancelButton"
+          (click)="cancelModal()"
+        >
+          Cancel
+        </button>
+      </div>
+      <div *ngIf="modalTableData.length != 0">
+        <p>Are you sure you want to update the row?</p>
+        <table id="modalTable" class="table">
+          <thead>
+            <th>Column Name</th>
+            <th>Previous Value</th>
+            <th>New Value</th>
+          </thead>
+  
+          <tr *ngFor="let row of modalTableData">
+            <td>{{ row.name }}</td>
+            <td>{{ row.oldValue }}</td>
+            <td>{{ row.newValue }}</td>
+          </tr>
+        </table>
+        <button
+          class="btn btn-danger"
+          value="Cancel"
+          id="cancelButton"
+          (click)="cancelModal()"
+        >
+          Cancel
+        </button>
+        <button class="btn btn-success" value="Update" id="updateButton" (click)="updateRow(modalTableData)">
+          Update
+        </button>
+      </div>
     </div>
   </div>

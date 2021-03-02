@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Data } from '../entity/Data';
@@ -17,6 +17,9 @@ export class DdServicesService {
 
   tableData:any[]=[];
   private baseURL = "http://localhost:9091/dgui/"
+  headers = new HttpHeaders({
+    'Content-Type': 'application/json' });
+  options = { headers: this.headers };
   // getAll(){
   //   console.log("table data "+this.tableData.length)
   //   console.log(this.tableData)
@@ -31,7 +34,20 @@ export class DdServicesService {
       console.log("something went wrong");
     });
   }
+  getMaxId(){
+    return this.http.get(this.baseURL+"getMaxId/");
+  }
+  // editRow(record : any){
+  //   return this.http.post<any>(this.baseURL+"editRow/",record,this.options);
+  // }
+  editRow(record : any,uid:number){
+     return this.http.post<any>(this.baseURL+"editRow/"+uid,record,this.options).subscribe(()=>{
+       this.getAllData();
+     });
 
+     
+    
+    }
 }
 
 

@@ -112,6 +112,7 @@ thead {
   border-radius: 15px;
   align-self: center;
   margin: 0px 10px;
+  margin-bottom: 10px;
 }
 
 .editContainer {
@@ -158,6 +159,10 @@ input[type="number"][size="4"] {
 }
 
 .navbar ul {
+  
+  display : grid;
+  grid-row-gap: 50px;
+  grid-template-columns: auto auto auto;
   list-style: none;
   background: #002e728a;
   text-align: center;
@@ -173,7 +178,6 @@ input[type="number"][size="4"] {
 .navbar a {
   text-decoration: none;
   color: white;
-  width: 379px;
   display: block;
   padding: 10px;
   font-size: 15px;
@@ -182,13 +186,11 @@ input[type="number"][size="4"] {
 
 .navbar a:hover {
   background: #002d72;
-  size:20px;
 }
 
 .navbar .tab-active {
   background: #002d72;
 }
-
 .filterIcon{
   color:yellow;
   font-size: 2rem;
